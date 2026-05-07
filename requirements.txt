@@ -1,4 +1,12 @@
+streamlit
 pdfplumber
 pandas
 nltk
-streamlit
+numpy
+scikit-learn
+sentence-transformers
+chromadb
+google-generativeai
+python-dotenv
+langchain
+langchain-community
