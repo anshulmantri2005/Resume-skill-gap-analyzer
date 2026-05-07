@@ -18,9 +18,10 @@ def recommend_roles(resume_skills):
     for _, row in data.iterrows():
 
         role = row['job_role']
+
         role_skills = row['skills']
 
-  role_embedding = model.encode([role_skills])
+        role_embedding = model.encode([role_skills])
 
         similarity = cosine_similarity(
             resume_embedding,
@@ -32,7 +33,8 @@ def recommend_roles(resume_skills):
             "score": round(similarity * 100, 2)
         })
 
-    recommendations.sort(
+    recommendations = sorted(
+        recommendations,
         key=lambda x: x['score'],
         reverse=True
     )
