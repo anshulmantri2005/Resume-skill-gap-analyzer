@@ -6,10 +6,16 @@ load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-model = genai.GenerativeModel("gemini-1.5-pro")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 
-def generate_ai_analysis(resume_text, matched_skills, missing_skills, recommended_roles, ats_score):
+def generate_ai_analysis(
+    resume_text,
+    matched_skills,
+    missing_skills,
+    recommended_roles,
+    ats_score
+):
 
     prompt = f"""
     Analyze this resume.
@@ -37,6 +43,9 @@ def generate_ai_analysis(resume_text, matched_skills, missing_skills, recommende
     5. Certifications
     """
 
-    response = model.generate_content(prompt)
+    try:
+        response = model.generate_content(prompt)
+        return response.text
 
-    return response.text
+    except Exception as e:
+        return f"Gemini Error: {str(e)}"
