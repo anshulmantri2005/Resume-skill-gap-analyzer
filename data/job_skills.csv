@@ -1,5 +1,8 @@
 job_role,skills
-DevOps Engineer,"Docker,Kubernetes,AWS,CI/CD,Linux,Python,Terraform"
-Data Analyst,"Python,SQL,Power BI,Excel,Statistics,Tableau"
-Web Developer,"HTML,CSS,JavaScript,React,Node.js,Git"
-Machine Learning Engineer,"Python,TensorFlow,Pandas,Scikit-learn,Deep Learning,Numpy"
+Data Analyst,"Python,SQL,Excel,Power BI,Tableau,Statistics,Pandas"
+Machine Learning Engineer,"Python,TensorFlow,PyTorch,Deep Learning,Docker,Kubernetes,AWS"
+Frontend Developer,"React,JavaScript,HTML,CSS,Tailwind,Next.js"
+Backend Developer,"Python,Django,FastAPI,Node.js,SQL,Docker"
+AI Engineer,"Python,LLM,RAG,LangChain,Vector Databases,Gemini API"
+DevOps Engineer,"Docker,Kubernetes,AWS,Jenkins,Terraform,Linux"
+Cybersecurity Analyst,"Network Security,SIEM,Python,Wireshark,Penetration Testing"
