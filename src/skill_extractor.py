@@ -1,16 +1,46 @@
-import nltk
+import re
 
-nltk.download('punkt')
+GLOBAL_SKILLS = [
+    "Python",
+    "Java",
+    "SQL",
+    "React",
+    "Node.js",
+    "FastAPI",
+    "Django",
+    "TensorFlow",
+    "PyTorch",
+    "Machine Learning",
+    "Deep Learning",
+    "LLM",
+    "RAG",
+    "LangChain",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "Power BI",
+    "Tableau",
+    "Statistics",
+    "Pandas",
+    "Linux",
+    "Terraform",
+    "Jenkins"
+]
 
-def extract_skills(text, skill_list):
+
+def extract_skills(text):
 
     text = text.lower()
 
     extracted_skills = []
 
-    for skill in skill_list:
+    for skill in GLOBAL_SKILLS:
 
-        if skill.lower() in text:
+        pattern = r'\b' + re.escape(skill.lower()) + r'\b'
+
+        if re.search(pattern, text):
             extracted_skills.append(skill)
 
-    return extracted_skills
+    return list(set(extracted_skills))
+
+   
