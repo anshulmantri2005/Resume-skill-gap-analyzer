@@ -2,7 +2,7 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
 def recommend_roles(resume_skills):
@@ -17,9 +17,9 @@ def recommend_roles(resume_skills):
 
     for _, row in data.iterrows():
 
-        role = row['job_role']
+        role = row["job_role"]
 
-        role_skills = row['skills']
+        role_skills = row["skills"]
 
         role_embedding = model.encode([role_skills])
 
@@ -35,7 +35,7 @@ def recommend_roles(resume_skills):
 
     recommendations = sorted(
         recommendations,
-        key=lambda x: x['score'],
+        key=lambda x: x["score"],
         reverse=True
     )
 
