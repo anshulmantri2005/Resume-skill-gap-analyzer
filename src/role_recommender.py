@@ -18,9 +18,7 @@ def recommend_roles(resume_skills):
     for _, row in data.iterrows():
 
         role = row["job_role"]
-
         role_skills = row["skills"]
-
         role_embedding = model.encode([role_skills])
 
         similarity = cosine_similarity(
