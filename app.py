@@ -10,99 +10,111 @@ from src.ats_score import calculate_ats_score
 from src.gemini_service import generate_ai_analysis
 
 
+# =========================================
 # PAGE CONFIG
+# =========================================
+
 st.set_page_config(
-    page_title="AI Resume Intelligence Platform",
+    page_title="AI Resume Intelligence",
     page_icon="🚀",
     layout="wide"
 )
 
 
+# =========================================
 # CUSTOM CSS
+# =========================================
+
 st.markdown("""
 <style>
 
-.main {
-    background-color: #0E1117;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+html, body, [class*="css"]  {
+    font-family: 'Inter', sans-serif;
 }
 
-h1 {
+.stApp {
+    background: linear-gradient(
+        135deg,
+        #050816 0%,
+        #0B1023 45%,
+        #111827 100%
+    );
     color: white;
-    font-size: 55px !important;
-    font-weight: 800 !important;
 }
 
-h2, h3 {
+.block-container {
+    padding-top: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+.hero-title {
+    font-size: 64px;
+    font-weight: 900;
     color: white;
+    margin-bottom: 10px;
 }
 
-.stFileUploader {
-    border: 2px dashed #6C63FF;
-    border-radius: 15px;
-    padding: 20px;
-    background: #161B22;
+.gradient-text {
+    background: linear-gradient(90deg, #7c3aed, #ec4899, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.metric-card {
-    background: linear-gradient(135deg,#1f2937,#111827);
-    padding: 20px;
-    border-radius: 18px;
-    text-align: center;
-    border: 1px solid #374151;
-    box-shadow: 0px 4px 20px rgba(0,0,0,0.3);
+.hero-subtitle {
+    color: #9ca3af;
+    font-size: 22px;
+    margin-bottom: 40px;
 }
 
-.skill-box {
-    background-color: #1E293B;
+.section-title {
     color: white;
-    padding: 10px 18px;
-    border-radius: 30px;
-    display: inline-block;
-    margin: 6px;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.role-card {
-    background: #111827;
-    padding: 20px;
-    border-radius: 16px;
-    margin-bottom: 15px;
-    border-left: 5px solid #8B5CF6;
-}
-
-.ai-box {
-    background: linear-gradient(135deg,#111827,#1F2937);
-    padding: 25px;
-    border-radius: 20px;
-    color: white;
-    line-height: 1.8;
-    border: 1px solid #374151;
+    font-size: 38px;
+    font-weight: 800;
+    margin-top: 50px;
+    margin-bottom: 25px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 
-# HEADER
+# =========================================
+# HERO SECTION
+# =========================================
+
 st.markdown("""
-<h1>🚀 AI Resume Intelligence Platform</h1>
-<p style='color:gray;font-size:18px;'>
-Upload your resume and get AI-powered ATS analysis,
-career guidance, and job role recommendations.
-</p>
+<div class="hero-title">
+🚀 AI Resume <span class="gradient-text">Intelligence</span>
+</div>
+
+<div class="hero-subtitle">
+Next-generation AI-powered ATS analysis,
+career intelligence, role prediction,
+and hiring optimization platform.
+</div>
 """, unsafe_allow_html=True)
 
 
-# FILE UPLOADER
+# =========================================
+# FILE UPLOAD
+# =========================================
+
 uploaded_file = st.file_uploader(
     "Upload Your Resume",
     type=["pdf"]
 )
 
 
+# =========================================
+# MAIN LOGIC
+# =========================================
+
 if uploaded_file is not None:
 
+    # SAVE PDF
     with open("temp_resume.pdf", "wb") as f:
         f.write(uploaded_file.read())
 
@@ -116,7 +128,7 @@ if uploaded_file is not None:
         resume_text
     )
 
-    # RECOMMEND ROLES
+    # RECOMMENDED ROLES
     recommended_roles = recommend_roles(
         resume_skills
     )
@@ -130,7 +142,7 @@ if uploaded_file is not None:
 
     job_skills = data[
         data["job_role"] == top_role
-    ]["skills"].values[0].split(",")
+    ]["skills"].values[0].split(", ")
 
     # MATCH SKILLS
     matched, missing, score = match_skills(
@@ -151,7 +163,7 @@ if uploaded_file is not None:
         " ".join(job_skills)
     )
 
-    # GEMINI ANALYSIS
+    # AI ANALYSIS
     ai_analysis = generate_ai_analysis(
         resume_text,
         matched,
@@ -160,98 +172,104 @@ if uploaded_file is not None:
         ats_score
     )
 
-    # DASHBOARD
-    st.markdown("---")
 
+    # =========================================
     # METRICS
+    # =========================================
+
+    st.markdown(
+        '<div class="section-title">📊 Resume Intelligence</div>',
+        unsafe_allow_html=True
+    )
+
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.markdown(f"""
-        <div class="metric-card">
-            <h2>🎯 ATS Score</h2>
-            <h1>{ats_score}%</h1>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col2:
-        st.markdown(f"""
-        <div class="metric-card">
-            <h2>🧠 Semantic Match</h2>
-            <h1>{semantic_score}%</h1>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col3:
-        st.markdown(f"""
-        <div class="metric-card">
-            <h2>💼 Best Role</h2>
-            <h3>{top_role}</h3>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # SKILLS SECTION
-    st.subheader("🛠 Extracted Skills")
-
-    for skill in resume_skills:
-        st.markdown(
-            f'<div class="skill-box">{skill}</div>',
-            unsafe_allow_html=True
+        st.metric(
+            label="🎯 ATS Score",
+            value=f"{ats_score}%"
         )
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    with col2:
+        st.metric(
+            label="🧠 Semantic Match",
+            value=f"{semantic_score}%"
+        )
 
+    with col3:
+        st.metric(
+            label="💼 Best Role",
+            value=top_role
+        )
+
+
+    # =========================================
+    # SKILLS DETECTED
+    # =========================================
+
+    st.markdown(
+        '<div class="section-title">🛠 Skills Detected</div>',
+        unsafe_allow_html=True
+    )
+
+    st.success(", ".join(resume_skills))
+
+
+    # =========================================
     # RECOMMENDED ROLES
-    st.subheader("💼 Recommended Job Roles")
+    # =========================================
+
+    st.markdown(
+        '<div class="section-title">💼 Recommended Roles</div>',
+        unsafe_allow_html=True
+    )
 
     for role in recommended_roles:
 
-        st.markdown(f"""
-        <div class="role-card">
-            <h3>{role['role']}</h3>
-            <p style='color:#A78BFA;font-size:18px;'>
-                Match Score: {role['score']}%
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.subheader(role['role'])
 
-    # SKILL GAP
-    col4, col5 = st.columns(2)
+        st.progress(
+            min(int(role['score']), 100)
+        )
 
-    with col4:
+        st.caption(
+            f"Match Score: {role['score']}%"
+        )
 
-        st.subheader("✅ Matched Skills")
+        st.divider()
 
-        for skill in matched:
-            st.success(skill)
 
-    with col5:
+    # =========================================
+    # MATCHED SKILLS
+    # =========================================
 
-        st.subheader("❌ Missing Skills")
+    st.markdown(
+        '<div class="section-title">✅ Matched Skills</div>',
+        unsafe_allow_html=True
+    )
 
-        for skill in missing:
-            st.error(skill)
+    st.success(", ".join(matched))
 
-    st.markdown("<br>", unsafe_allow_html=True)
 
+    # =========================================
+    # MISSING SKILLS
+    # =========================================
+
+    st.markdown(
+        '<div class="section-title">❌ Missing Skills</div>',
+        unsafe_allow_html=True
+    )
+
+    st.error(", ".join(missing))
+
+
+    # =========================================
     # AI ANALYSIS
-    st.subheader("🤖 AI Career Analysis")
+    # =========================================
 
-    st.markdown(f"""
-    <div class="ai-box">
-    {ai_analysis}
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-title">🤖 AI Career Analysis</div>',
+        unsafe_allow_html=True
+    )
 
-    # FOOTER
-    st.markdown("---")
-
-    st.markdown("""
-    <center>
-    <p style='color:gray;'>
-    Built with ❤️ using Streamlit + Gemini AI
-    </p>
-    </center>
-    """, unsafe_allow_html=True)
+    st.info(ai_analysis)
